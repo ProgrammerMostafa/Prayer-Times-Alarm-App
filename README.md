@@ -1,16 +1,12 @@
-# flutter_alarm_prayer_app
+# Flutter_PrayerTimes(Alarm)_App
 
-A new Flutter project.
+This application allows you to know prayer times. <br />
+Also, can you set alarm but not fininsed yet. <br />
+Technologies used --> ( Bloc State Management ). <br />
 
-## Getting Started
+----------------------------------------------------------------------------------------------
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<pre>
+    PrayerTimes_Screen:          Alarm_Screen:(Not Finished)                   
+    -------------------          ---------------------------                    
+<img src = "https://user-images.githubusercontent.com/95254717/173862730-0cfb51ae-af6d-47c2-9fdf-23c6eae78746.png" height=350>       <img src = "https://user-images.githubusercontent.com/95254717/173862755-6a30b5ec-97aa-40ca-90ac-5299457024a2.png" height=350>  
