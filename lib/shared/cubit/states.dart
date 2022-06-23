@@ -2,11 +2,11 @@ class AlarmStates {}
 
 class AlarmInitialStates extends AlarmStates {}
 
-class AlarmGetPrayerTimesOfDaySuccessStates extends AlarmStates {}
+class AlarmGetPrayerTimesOfDaySuccessState extends AlarmStates {}
 
-class AlarmGetPrayerTimesOfDayErrorStates extends AlarmStates {
+class AlarmGetPrayerTimesOfDayErrorState extends AlarmStates {
   String error;
-  AlarmGetPrayerTimesOfDayErrorStates(this.error);
+  AlarmGetPrayerTimesOfDayErrorState(this.error);
 }
 
-class AlarmResetValuesStates extends AlarmStates {}
+class AlarmChangeIndexValueSuccessState extends AlarmStates {}

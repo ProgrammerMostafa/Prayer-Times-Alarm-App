@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import '/shared/cubit/states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AlarmCubit extends Cubit<AlarmStates>{
+class AlarmCubit extends Cubit<AlarmStates> {
   AlarmCubit() : super(AlarmInitialStates());
   static AlarmCubit get(context) => BlocProvider.of<AlarmCubit>(context);
 
@@ -18,23 +18,23 @@ class AlarmCubit extends Cubit<AlarmStates>{
     '06:57 PM',
     '08:31 PM',
   ];
-  //////////////////////////
+  ////////////////////////////////////////////////
   void getPrayerTimesNow() {
-    int yearNow = DateTime.now().year;
-
-    String monthNow = DateTime.now().month < 10
-        ? '0${DateTime.now().month}'
-        : DateTime.now().month.toString();
-
-    String dayNow = DateTime.now().day < 10
-        ? '0${DateTime.now().day}'
-        : DateTime.now().day.toString();
-
-    getTimes(dayNow, monthNow, yearNow);
+    getTimes(dateTime: DateTime.now());
   }
 
   //////////////////////////
-  void getTimes(day, month, year) {
+  void getTimes({required DateTime dateTime}) {
+    int year = dateTime.year;
+
+    String month =
+        dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month.toString();
+
+    String day =
+        dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day.toString();
+
+    ///////////////////////////////////////////
+    // To read asset file
     rootBundle.loadString("assets/prayer_times/calender$year.txt").then(
       (calender) {
         List<String> listOfDays = calender.split('#');
@@ -42,44 +42,31 @@ class AlarmCubit extends Cubit<AlarmStates>{
         String returnedDay = listOfDays.firstWhere((element) {
           return element.contains('$day-$month-$year');
         });
-        ////////////////
+        //////////////
         prayerTimesDay = returnedDay.trim().split('|');
-        ///////////////
-        emit(AlarmGetPrayerTimesOfDaySuccessStates());
+        //////////////
+        emit(AlarmGetPrayerTimesOfDaySuccessState());
       },
     ).catchError((error) {
-      emit(AlarmGetPrayerTimesOfDayErrorStates(error));
+      emit(AlarmGetPrayerTimesOfDayErrorState(error));
     });
   }
 
   ///////////////////////
   int index = 0;
-  void changePrayerTimes({required bool isClickedLeft, bool reset = false}) {
+  void changePrayerTimes({required bool isClickedLeft}) {
     //if clicked left >>> --index or clicked right >>> ++index
     isClickedLeft ? --index : ++index;
-    ///////////////
-    if (index == 0) {
-      getPrayerTimesNow();
-    } else {
-      DateTime dateTime = DateTime.now().add(Duration(days: index));
-
-      int year = dateTime.year;
-
-      String month = dateTime.month < 10
-          ? '0${dateTime.month}'
-          : dateTime.month.toString();
-
-      String day =
-          dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day.toString();
-
-      getTimes(day, month, year);
-    }
+    emit(AlarmChangeIndexValueSuccessState());
+    //////////////////////////////////////////
+    DateTime dateTime = DateTime.now().add(Duration(days: index));
+    getTimes(dateTime: dateTime);
   }
 
   ///////////////////////
   void resetValues() {
     index = 0;
-    emit(AlarmResetValuesStates());
-    getPrayerTimesNow();
+    emit(AlarmChangeIndexValueSuccessState());
+    getTimes(dateTime: DateTime.now());
   }
 }
