@@ -18,8 +18,7 @@ class PrayerTimesScreen extends StatelessWidget {
           children: [
             Image.asset('assets/images/back.jpg', fit: BoxFit.fill),
             //////////////////
-            buildFirstRow(cubit),
-            buildSecondRow(cubit),
+            buildTopContainer(ctx, cubit),
             //////////////////
             buildPrayerTimesList(cubit),
           ],
@@ -29,7 +28,8 @@ class PrayerTimesScreen extends StatelessWidget {
   }
 
   ///////////////////////////////
-  buildFirstRow(AlarmCubit cubit) {
+  buildTopContainer(BuildContext ctx, AlarmCubit cubit) {
+    String date = cubit.prayerTimesDay[0].replaceAll('-', '/');
     return Padding(
       padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
       child: Row(
@@ -39,18 +39,55 @@ class PrayerTimesScreen extends StatelessWidget {
           buildClickedImage(cubit, true),
           ////////////////////////////////
           Expanded(
-            child: Container(
-              height: 40,
-              alignment: Alignment.center,
-              child: Text(
-                cubit.prayerTimesDay[1],
-                style: TextStyle(
-                  color: cubit.index == 0
-                      ? const Color.fromARGB(255, 252, 144, 55)
-                      : Colors.black,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
+            child: InkWell(
+              onTap: () {
+                showDatePicker(
+                  context: ctx,
+                  initialDate: DateTime(
+                    int.parse(cubit.prayerTimesDay[0].split('-')[2]),
+                    int.parse(cubit.prayerTimesDay[0].split('-')[1]),
+                    int.parse(cubit.prayerTimesDay[0].split('-')[0]),
+                  ),
+                  firstDate: DateTime(2022),
+                  lastDate: DateTime(2035),
+                ).then((selectedDateTime) {
+                  if (selectedDateTime != null) {
+                     DateTime now = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                    );
+                    cubit.index = selectedDateTime.difference(now).inDays;
+                    /////////////////////
+                    cubit.getTimes(dateTime: selectedDateTime);
+                    //////////////////////
+                  }
+                });
+              },
+              ////
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    cubit.prayerTimesDay[1], // day name
+                    style: TextStyle(
+                      color: cubit.index == 0
+                          ? const Color.fromARGB(255, 252, 144, 55)
+                          : Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  /////////////////////
+                  Text(
+                    date,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -72,32 +109,6 @@ class PrayerTimesScreen extends StatelessWidget {
         color: const Color.fromARGB(255, 252, 144, 55),
         width: 40,
         height: 40,
-      ),
-    );
-  }
-
-  ////////////////////////////////////////////////////////////////
-  buildSecondRow(AlarmCubit cubit) {
-    String date = cubit.prayerTimesDay[0].replaceAll('-', '/');
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 62),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 40,
-            alignment: Alignment.center,
-            child: Text(
-              date,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
